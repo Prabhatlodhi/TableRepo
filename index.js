@@ -12,27 +12,18 @@ submitBtn.addEventListener("click", submitData);
 let dataStorage = loadStoredData();
 
 function submitData() {
-  //   if (
-  //     name.value === "" ||
-  //     email.value === "" ||
-  //     panNumber.value === "" ||
-  //     addres.value === "" ||
-  //     mobile.value === ""
-  //   ) {
-  //     alert("Please fill all fields");
-  //     return;
-  //   }
+    // if (
+    //   name.value === "" ||
+    //   email.value === "" ||
+    //   panNumber.value === "" ||
+    //   addres.value === "" ||
+    //   mobile.value === ""
+    // ) {
+    //   alert("Please fill all fields");
+    //   return;
+    // }
 
-  const uniqueId = Math.floor(Math.random() * 99999);
-  const newRow = `
-    <tr>
-        <td>${name.value}</td>
-        <td>${email.value}</td>
-        <td>${panNumber.value}</td>
-        <td>${addres.value}</td>
-        <td>${mobile.value}</td>
-        <td>${uniqueId}</td>
-    </tr>`;
+  const uniqueId = Math.floor(Math.random() * 99999); //41564545405bhjb
 
   const payload = {
     name: name.value,
@@ -42,6 +33,18 @@ function submitData() {
     mobile: mobile.value,
     uniqueId: uniqueId,
   };
+
+  const newRow = createRow(payload);
+
+  // const newRow = `
+  //   <tr>
+  //       <td>${name.value}</td>
+  //       <td>${email.value}</td>
+  //       <td>${panNumber.value}</td>
+  //       <td>${addres.value}</td>
+  //       <td>${mobile.value}</td>
+  //       <td>${uniqueId}</td>
+  //   </tr>`;
 
   tableRow.insertAdjacentHTML("afterend", newRow);
   storeData(payload);
@@ -68,14 +71,26 @@ function renderStoredData() {
 }
 
 function createRow(data) { 
-  return ` <tr>
+  return `<tr id="row-${data.uniqueId}" >
     <td>${data.name}</td>
     <td>${data.email}</td>
     <td>${data.panNumber}</td>
     <td>${data.addres}</td>
     <td>${data.mobile}</td>
     <td>${data.uniqueId}</td>
+    <td><button onClick="deleteRowData(${data.uniqueId})">Delete</button></td>
 </tr>`;
+}
+
+function deleteRowData(uniqueId){
+  const row = document.querySelector(`#row-${uniqueId}`);
+  if(row){
+    row.remove();
+  };
+  dataStorage = dataStorage.filter((item)=>{
+    return item.uniqueId !== uniqueId;
+  });
+  localStorage.setItem("formData", JSON.stringify(dataStorage))
 }
 
 renderStoredData();
